@@ -1,8 +1,5 @@
 // API Configuration for both development and production
-export const API = import.meta.env.VITE_API_URL || 
-  (import.meta.env.MODE === 'production' 
-    ? 'https://internecom18.onrender.com' 
-    : 'http://localhost:5000');
+export const API = "https://internecom18.onrender.com"
 
 // Fallback products for development
 export const products = [
