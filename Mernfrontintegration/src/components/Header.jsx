@@ -1,128 +1,151 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-export default function Header({ cartLength }) {
+export default function Header({ cartLength, user, setUser }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
   const logout = () => {
-    localStorage.removeItem("user");
-    window.location.reload();
+    setUser(null);
+    navigate("/");
   };
 
   return (
-    <header className="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 py-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          
+    <header className="bg-[var(--primary)] text-white shadow-md sticky top-0 z-50">
+      <div className="w-full px-8 py-10">
+        <div className="flex justify-between items-center">
+
           {/* LOGO */}
-          <Link to="/" className="mb-4 md:mb-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-white hover:text-yellow-300 transition">
-              🛍️ MERN E-Commerce
-            </h1>
-            <p className="text-sm text-indigo-100">
-              Premium Shopping Experience
-            </p>
+          <Link to="/" className="flex items-center gap-4 group">
+
+            <span className="text-2xl font-serif font-bold tracking-wide text-white group-hover:text-[var(--secondary)] transition-colors">
+              Ecommerce
+            </span>
           </Link>
 
-          {/* RIGHT ACTIONS */}
-          <div className="flex items-center gap-4">
-            <Link
-              to="/addproduct"
-              className="bg-white/90 text-indigo-700 
-              hover:bg-white 
-                px-4 py-2 rounded-xl 
-                font-medium transition shadow"
-            >
+          {/* DESKTOP NAVIGATION */}
+          <div className="hidden md:flex items-center gap-10">
+            <Link to="/addproduct" className="text-gray-300 hover:text-white transition-colors font-medium text-sm tracking-wide uppercase">
               Add Product
             </Link>
-            {/* CART */}
-            <Link
-              to="/cart"
-              className="relative flex items-center gap-2 
-                         bg-white/90 text-indigo-700 
-                         hover:bg-white 
-                         px-4 py-2 rounded-xl 
-                         font-medium transition shadow"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-              <span>Cart</span>
 
+            <Link to="/cart" className="relative group text-gray-300 hover:text-white transition-colors font-medium text-sm tracking-wide uppercase flex items-center gap-2">
+              <span>Cart</span>
               {cartLength > 0 && (
-                <span className="absolute -top-2 -right-2 
-                                 bg-red-500 text-white 
-                                 text-xs font-bold 
-                                 h-5 w-5 rounded-full 
-                                 flex items-center justify-center">
-                  {cartLength}
+                <span className="bg-[var(--secondary)] text-white text-xs font-bold h-5 w-5 rounded-full flex items-center justify-center">
+                  {cartLength > 99 ? '99+' : cartLength}
                 </span>
               )}
             </Link>
 
             {/* LOGIN / LOGOUT */}
-            {localStorage.getItem("user") ? (
-              <button
-                onClick={logout}
-                className="flex items-center gap-2 
-              bg-red-500 text-black 
-              hover:bg-red-600 
-                px-4 py-2 rounded-xl 
-                font-medium transition shadow"
-              >
-
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+            {user ? (
+              <div className="flex items-center gap-6">
+                <span className="text-gray-400 text-sm font-serif italic">
+                  Hello, {user?.name || 'User'}
+                </span>
+                <button
+                  onClick={logout}
+                  className="bg-[var(--secondary)] hover:bg-[#92400e] text-white px-5 py-2 rounded-sm text-sm uppercase tracking-wider transition-all shadow-sm"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                  />
-                </svg>
-                Logout
-              </button>
+                  Logout
+                </button>
+              </div>
             ) : (
               <Link
                 to="/login"
-                className="flex items-center gap-2 
-                           border border-indigo-300 
-                           text-white 
-                           hover:bg-indigo-500 
-                           hover:border-indigo-500 
-                           px-4 py-2 rounded-xl 
-                           font-medium transition"
+                className="bg-[var(--secondary)] hover:bg-[#92400e] text-white px-6 py-2 rounded-sm text-sm uppercase tracking-wider transition-all shadow-sm"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                  />
-                </svg>
                 Login
               </Link>
             )}
+          </div>
+
+
+          {/* MOBILE MENU BUTTON */}
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            className="md:hidden text-white p-2"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+
+        {/* MOBILE SIDEBAR DRAWER */}
+        {/* Overlay */}
+        <div
+          className={`fixed inset-0 bg-black/50 z-[60] transition-opacity duration-300 md:hidden ${isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+            }`}
+          onClick={() => setIsMenuOpen(false)}
+        />
+
+        {/* Sidebar */}
+        <div
+          className={`fixed top-0 right-0 h-full w-64 bg-[var(--primary)] shadow-2xl z-[70] transform transition-transform duration-300 ease-in-out md:hidden ${isMenuOpen ? "translate-x-0" : "translate-x-full"
+            }`}
+        >
+          <div className="flex flex-col h-full bg-[var(--primary)] border-l border-white/10">
+            {/* Sidebar Header */}
+            <div className="flex items-center justify-between p-6 border-b border-white/10">
+              <span className="text-xl font-serif font-bold text-white tracking-wide">Menu</span>
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Sidebar Links */}
+            <div className="flex-1 overflow-y-auto py-6 px-6 space-y-6">
+              <Link
+                to="/addproduct"
+                className="text-gray-300 hover:text-[var(--secondary)] block text-sm uppercase tracking-widest font-medium transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Add Product
+              </Link>
+
+              <Link
+                to="/cart"
+                className="text-gray-300 hover:text-[var(--secondary)] block text-sm uppercase tracking-widest font-medium transition-colors flex items-center justify-between"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <span>Cart</span>
+                {cartLength > 0 && (
+                  <span className="bg-[var(--secondary)] text-white text-xs font-bold h-5 w-5 rounded-full flex items-center justify-center">
+                    {cartLength}
+                  </span>
+                )}
+              </Link>
+
+              <div className="pt-6 border-t border-white/10">
+                {user ? (
+                  <div className="space-y-4">
+                    <p className="text-gray-400 text-xs uppercase tracking-wider mb-2">Logged in as</p>
+                    <p className="text-white font-serif italic mb-4">{user.name}</p>
+                    <button
+                      onClick={() => { logout(); setIsMenuOpen(false); }}
+                      className="w-full bg-[var(--secondary)] hover:bg-[#92400e] text-white px-4 py-3 rounded-sm text-sm uppercase tracking-wider transition-all text-center"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <Link
+                    to="/login"
+                    className="w-full bg-[var(--secondary)] hover:bg-[#92400e] text-white px-4 py-3 rounded-sm text-sm uppercase tracking-wider transition-all block text-center shadow-lg"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
